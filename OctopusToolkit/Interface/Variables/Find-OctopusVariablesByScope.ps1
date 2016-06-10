@@ -3,17 +3,13 @@ function Find-OctopusVariablesByScope {
     param(
         $Name,
         [ValidateSet("Environment", "Machine", "Action", "Role", "Channel")]$Scope = "Environment",
-        $ProjectName,
-        [switch]$Human
+        $ProjectName
     )
-
-
 
     $project = Invoke-Octopus '/api/Projects/All' | % { $_ } | ? Name -eq $ProjectName
     if ($null -eq $project) {
         throw "Project $ProjectName can't be found"
     }
-
     
     $scopeId  = Invoke-Octopus ('/api/Variables/{0}' -f $project.VariableSetId) | % { $projectVariables = @(@{ Container = "Project $ProjectName"; Variables = $_.Variables }); $_.ScopeValues."$($Scope)s" } | ? Name -eq $Name | % Id
     Write-Verbose "ScopeId:$scopeId"
