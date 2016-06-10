@@ -1,0 +1,12 @@
+Get variables from release point in time (like bluefin from cmdlie)
+resolve variables based on 1 scope
+find variable usages across all proj, sets and in other variables
+
+for scope searching:
+  variables scope - done
+  envrionments scope
+     - node -> machines
+     - machines -> environmets
+     - nodes -> environments
+     
+when searching for environment scope and machines that have been scoped to it
