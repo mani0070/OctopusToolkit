@@ -3,8 +3,8 @@
             $Uri,
             $Body,
            [ValidateSet("Get", "Put")]$Method = "Get",
-            $OctopusUri = $OctopusUri,
-            $OctopusApiKey = $OctopusApiKey
+            $OctopusUri = $env:OctopusUri,
+            $OctopusApiKey = $env:OctopusApiKey
         )
 
         $absoluteUri = "{0}/{1}" -f $OctopusUri, $uri.Trim('/')
