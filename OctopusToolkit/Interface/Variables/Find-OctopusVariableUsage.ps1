@@ -3,21 +3,13 @@ function Find-OctopusVariableUsage {
         $Name
     )
 
-
-
     $allProjectVariables = Invoke-Octopus '/api/Projects/All' |
-         % { $name = $_.Name; $_.VariableSetId } | 
+         % { $name = $_.Name; Invoke-Octopus ('/api/Variables/{0}' -f $_.VariableSetId) } |
          % { @{ Container = "Project $name"; Variables = $_.Variables } }
 
-    
-    $scopeId  = Invoke-Octopus ('/api/Variables/{0}' -f $project.VariableSetId) | % { $projectVariables = @(@{ Container = "Project $ProjectName"; Variables = $_.Variables }); $_.ScopeValues."$($Scope)s" } | ? Name -eq $Name | % Id
-    Write-Verbose "ScopeId:$scopeId"
-    if ($null -eq $scopeId) {
-        throw "Scope '$Name' of scope type $Scope can't be found"
-    }
     $includedVariables = @($project.IncludedLibraryVariableSetIds |
         ? { $null -ne $_ } | 
-        % { Invoke-Octopus ('/api/LibraryVariableSets/{0}' -f $_) } |
+        % { Invoke-Octopus '/api/LibraryVariableSets/All?ContentType=Variables' } |
         % { $variableSetName = $_.Name; Invoke-Octopus $_.Links.Variables } |
         % { @{ Container = "Library Variable Set: $variableSetName"; Variables = $_.Variables } })
 
