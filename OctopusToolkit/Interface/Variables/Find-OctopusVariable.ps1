@@ -12,9 +12,13 @@ function Find-OctopusVariable {
     if ($null -eq $scopeId) {
         throw "$Name scope of type $Scope not found."
     }
-    
+    # when checking for scopign also check for actions in projects which have been scoped
     Get-OctopusVariableSets -ResolveVariableSets |
-        ? { write-host 1; $_.Variables.Scope.$Scope -contains $scopeId } |
+    #    ? { $_.Variables.Scope.$Scope -contains $scopeId } |
         Group-Object -Property @('Type', 'Name') |
-        Format-Table -AutoSize
+        % { 
+            Write-Host "`n`t$($_.Name)"
+            $_.Group.Variables | ft #.Variables | Format-Table -AutoSize -Property @('Name', 'Value')
+        }
+        
 }

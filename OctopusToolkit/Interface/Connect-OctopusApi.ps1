@@ -7,9 +7,10 @@ function Connect-OctopusApi {
     
     $success = $false
     try {
-        if (Invoke-Octopus -BaseUri $Uri -ApiKey $ApiKey | ? Application -eq "Octopus Deploy") {
+        $baseUri = '{0}/api' -f $Uri.Replace('/api', '').Trim('/')
+        if (Invoke-Octopus -BaseUri $baseUri -ApiKey $ApiKey | ? Application -eq "Octopus Deploy") {
             $ExecutionContext.SessionState.Module.PrivateData['OctopusApi'] = @{
-                BaseUri = ('{0}/api' -f ($Uri.Replace('/api', '').Trim('/')))
+                BaseUri = $baseUri
                 ApiKey = $ApiKey
             }
             $success = $true           
