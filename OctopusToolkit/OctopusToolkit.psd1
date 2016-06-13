@@ -5,7 +5,7 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-# RootModule = ''
+RootModule = 'OctopusToolkit.psm1'
 
 # Version number of this module.
 ModuleVersion = '1.0'
@@ -17,7 +17,7 @@ GUID = 'c8e55b37-efd7-4d11-bc58-12f6bb136e42'
 Author = 'Paul Marston'
 
 # Company or vendor of this module
-CompanyName = 'Unknown'
+# CompanyName = ''
 
 # Copyright statement for this module
 Copyright = '(c) 2016 Paul Marston. All rights reserved.'
@@ -62,16 +62,16 @@ Description = 'A PowerShell Module to use when developing and/or maintaining Oct
 # NestedModules = @()
 
 # Functions to export from this module
-FunctionsToExport = '*'
+FunctionsToExport = 'Format-StepTemplateProxyFunction','Find-OctopusVariable','Connect-OctopusApi'
 
 # Cmdlets to export from this module
-CmdletsToExport = '*'
+CmdletsToExport = ''
 
 # Variables to export from this module
-VariablesToExport = '*'
+VariablesToExport = ''
 
 # Aliases to export from this module
-AliasesToExport = '*'
+AliasesToExport = ''
 
 # DSC resources to export from this module
 # DscResourcesToExport = @()

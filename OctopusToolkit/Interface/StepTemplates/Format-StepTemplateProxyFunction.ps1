@@ -72,7 +72,7 @@ function Format-StepTemplateProxyFunction {
 )
 function Invoke-StepTemplate {
     param(
-    $($paramCmdlet.Trim().Trim(','))
+      $($paramCmdlet.Trim().Trim(','))
     )
 
     $Name $mappedCmdlet
