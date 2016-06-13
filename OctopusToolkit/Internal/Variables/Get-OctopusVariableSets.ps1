@@ -5,7 +5,7 @@ function Get-OctopusVariableSets {
     
     $variableSets = @(Invoke-Octopus '/Projects/All' | % { @{ Id = $_.Id; Name = $_.Name; Type = "Project"; VariableSetId = $_.VariableSetId; IncludedLibraryVariableSetIds = $_.IncludedLibraryVariableSetIds } }) +
                     @(Invoke-Octopus '/LibraryVariableSets/All?ContentType=Variables' | % { @{ Id = $_.Id; Name = $_.Name; Type = "Library"; VariableSetId = $_.VariableSetId }}) 
-    if ($ResolveVariableSets) {
+    if ($ResolveVariableSets) {  
         $init = [scriptblock]::Create("function Invoke-Octopus { ${function:Invoke-Octopus} }")
         $jobs = $variableSets | select-object -first 4 |  % {
             Start-Job -InitializationScript $init -ScriptBlock {
