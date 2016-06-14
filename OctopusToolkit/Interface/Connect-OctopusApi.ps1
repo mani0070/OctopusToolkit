@@ -22,7 +22,5 @@ function Connect-OctopusApi {
     }
     
     if ($success) { Write-Host -ForegroundColor Green "Connection successful." }
-    else {
-        Write-Host -ForegroundColor Red "Connection unsuccessful."
-    }
+    else { Write-Host -ForegroundColor Red "Connection unsuccessful." }
 }
