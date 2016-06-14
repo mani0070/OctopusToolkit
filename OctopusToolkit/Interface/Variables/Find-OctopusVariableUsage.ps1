@@ -36,13 +36,4 @@ function Find-OctopusVariableUsage {
 
     $output = $projectVariables + $includedVariables |
     % { $container = $_.Container; $_.Variables } |
-        ? { $_.Scope.$Scope -contains $scopeId } |
-        % { New-Object -TypeName PSCustomObject -Property (@{
-                Container = $container
-                 Name = $_.Name
-                Value = $_.Value
-            })
-        }
-        
-       $output | Format-Table -Property @('Container', 'Name', 'Value')  -AutoSize
 }

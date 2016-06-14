@@ -62,7 +62,7 @@ Description = 'A PowerShell Module to use when developing and/or maintaining Oct
 # NestedModules = @()
 
 # Functions to export from this module
-FunctionsToExport = 'Format-StepTemplateProxyFunction','Find-OctopusVariable','Connect-OctopusApi'
+FunctionsToExport = 'Format-StepTemplateProxyFunction','Get-OctopusScope','Connect-OctopusApi'
 
 # Cmdlets to export from this module
 CmdletsToExport = ''
