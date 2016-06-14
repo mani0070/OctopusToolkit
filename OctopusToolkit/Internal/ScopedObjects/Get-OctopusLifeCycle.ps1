@@ -15,6 +15,7 @@ function Get-OctopusLifeCycle {
             OwnerType = $OwnerType
             OwnerName = $OwnerName
             Type = "LifeCycle"
+            Name = "$lifecycleName (Phase: $($_.Name))  "
             Value = ""
             Scope = @{
                 Environment = ($_.OptionalDeploymentTargets + $_.AutomaticDeploymentTargets)
