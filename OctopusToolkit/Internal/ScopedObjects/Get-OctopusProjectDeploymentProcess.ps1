@@ -4,7 +4,7 @@ function Get-OctopusProjectDeploymentProcess {
     )
 
     Invoke-Octopus "/Projects/$ProjectId" | % {
-        $currentProjectId = $_.Id
+        $currentProject = $_
         Invoke-Octopus $_.Links.DeploymentProcess
         } | % {
             $id = $_.Id
@@ -19,8 +19,9 @@ function Get-OctopusProjectDeploymentProcess {
 
             New-Object -TypeName PSCustomObject -Property @{
                 Id = $id
-                OwnerId = $currentProjectId
-                Type = "Action"
+                OwnerType = 'Project'
+                OwnerName = $currentProject.Name
+                Type = 'Action'
                 Name = $name
                 Value = ""
                 Scope = @{

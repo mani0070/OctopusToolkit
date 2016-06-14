@@ -1,6 +1,6 @@
-function Get-OctopusScopeValues {
+function Get-OctopusScopeValue {
     param(
-        [ValidateSet("Environment", "Machine", "Role")]$Scope
+        $Scope
     )
     
     switch ($Scope) {

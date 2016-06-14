@@ -4,9 +4,10 @@
 . "$(Join-Path $PSScriptRoot '\Interface\Connect-OctopusApi.ps1')"
 
 <# Internal #>
-. "$(Join-Path $PSScriptRoot '\Internal\Model\ScopedObjects\Get-OctopusMachines.ps1')"
-. "$(Join-Path $PSScriptRoot '\Internal\ScopedObjects\Get-OctopusMachines.ps1')"
+. "$(Join-Path $PSScriptRoot '\Internal\ScopedObjects\Get-OctopusLifeCycle.ps1')"
+. "$(Join-Path $PSScriptRoot '\Internal\ScopedObjects\Get-OctopusMachine.ps1')"
 . "$(Join-Path $PSScriptRoot '\Internal\ScopedObjects\Get-OctopusProjectDeploymentProcess.ps1')"
-. "$(Join-Path $PSScriptRoot '\Internal\ScopedObjects\Get-OctopusVariableSets.ps1')"
-. "$(Join-Path $PSScriptRoot '\Internal\Get-OctopusScopeValues.ps1')"
+. "$(Join-Path $PSScriptRoot '\Internal\ScopedObjects\Get-OctopusVariableSet.ps1')"
+. "$(Join-Path $PSScriptRoot '\Internal\Get-Cache.ps1')"
+. "$(Join-Path $PSScriptRoot '\Internal\Get-OctopusScopeValue.ps1')"
 . "$(Join-Path $PSScriptRoot '\Internal\Invoke-Octopus.ps1')"

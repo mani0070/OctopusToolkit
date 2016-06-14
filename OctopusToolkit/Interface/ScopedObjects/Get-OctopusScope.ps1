@@ -3,38 +3,45 @@ function Get-OctopusScope {
     param(
         [Parameter(Mandatory=$true)]$Name,
         [Parameter(Mandatory=$true)][ValidateSet("Environment", "Machine", "Role")]$Scope,
-        [Parameter(Mandatory=$true, ParameterSetName="ByProject")]$ProjectName
+        [Parameter(Mandatory=$true, ParameterSetName="ByProject")]$ProjectName,
+        [switch]$IncludeUnScoped
     )
 
-     $scopeId = Get-OctopusScopeValues -Scope $Scope | ? Name -eq $Name | % Id
-    if ($null -eq $scopeId) {
-        throw "$Name scope of type $Scope not found."
-    }
+   $scopeId = Get-OctopusScopeValue -Scope $Scope |  ? Name -eq $Name | % Id
+   if ($null -eq $scopeId) {
+       throw "$Name scope of type $Scope not found."
+   }
+   Write-Verbose "ScopeId: $scopeId"
 
-   $project =  Invoke-Octopus '/Projects/All' | 
+   $project = Invoke-Octopus '/Projects/All' | 
             ? Name -eq $ProjectName |
             % {
+                $project = $_
                 @{
                     Id = $_.Id
-                    VariableSetId = $_.VariableSetId
-                    IncludedLibraryVariableSetIds = $_.IncludedLibraryVariableSetIds
+                    VariableSet = (Get-OctopusVariableSet -VariableSetId $_.VariableSetId -OwnerType "Project" -OwnerName $project.Name)
+                    LibraryVariableSets = ($project.IncludedLibraryVariableSetIds | % { Invoke-Octopus "/LibraryVariableSets/$_" } | % { Get-OctopusVariableSet -VariableSetId $_.VariableSetId -OwnerType "Library" -OwnerName $_.Name })
                 }
             }
     if ($null -eq $project) {
         throw "$ProjectName project not found."
     }
-    $project.IncludedVariableSetIds = $project.IncludedLibraryVariableSetIds | % { Invoke-Octopus "/LibraryVariableSets/$_" } | % VariableSetId
     
-    $variableSets = @($project.VariableSetId) + @($project.IncludedVariableSetIds) | % { Get-OctopusVariableSets -VariableSetId $_ }
-    $deploymentProcess  = Get-OctopusDeploymentProcess -ProjectId $project.Id
-    $machines = Get-OctopusMachines
+    $project.DeploymentProcess = Get-OctopusProjectDeploymentProcess -ProjectId $project.Id
+    $project.Machines = Get-OctopusMachine -OwnerType $Scope -OwnerName $Name
+    $project.LifeCycle = Get-OctopusLifeCycle -OwnerType $Scope -OwnerName $Name
     
-    @($variableSets, $deploymentProcess, $machines) |
-        ? { $_.Scope.$Scope -contains $scopeId } |
-        Format-Table @(
-                @{Name = 'Type'; Expression = { $_.Type } }
-                @{Name = 'Owner Id'; Expression = { $_.OwnerId } }
+    @($project.VariableSet, $project.LibraryVariableSets, $project.DeploymentProcess, $project.Machines, $project.LifeCycle) |
+         % { $_ } |
+         ? {
+            if ($null -eq $_.Scope.$Scope -or $_.Scope.$Scope.Count -eq 0) { $IncludeUnScoped.ToBool() }
+            else { $_.Scope.$Scope -contains $scopeId }
+        } |
+        Sort-Object -Property @('OwnerType', 'OwnerName', 'Type', 'Name', 'Value') |
+        Format-Table -GroupBy Type -Property @(
+                @{Name = 'Owner Type'; Expression = { $_.OwnerType }; Width = 12 }
+                @{Name = 'Owner Name'; Expression = { $_.OwnerName }; Width = 40 }
+                @{Name = 'Type'; Expression = { $_.Type }; Width = 12 }
                 @{Name = 'Name'; Expression = { $_.Name } }
-                @{Name = 'Value'; Expression = { $_.Value } }
-            ) -AutoSize
+            ) -Wrap
 }
