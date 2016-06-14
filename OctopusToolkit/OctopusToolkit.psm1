@@ -2,6 +2,7 @@
 . "$(Join-Path $PSScriptRoot '\Interface\ScopedObjects\Get-OctopusScope.ps1')"
 . "$(Join-Path $PSScriptRoot '\Interface\StepTemplates\Format-StepTemplateProxyFunction.ps1')"
 . "$(Join-Path $PSScriptRoot '\Interface\Connect-OctopusApi.ps1')"
+. "$(Join-Path $PSScriptRoot '\Interface\Reset-Cache.ps1')"
 
 <# Internal #>
 . "$(Join-Path $PSScriptRoot '\Internal\ScopedObjects\Get-OctopusLifeCycle.ps1')"
