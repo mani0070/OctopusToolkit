@@ -14,16 +14,13 @@ function Get-OctopusProjectDeploymentProcess {
             $targetRoles = $_.Properties['Octopus.Action.TargetRoles']
             $_.Actions
         } | % {
-            if ($stepName -eq $_.Name) { $name = $_.Name }
-            else { $name = '{0} - {1}' -f $stepName, $_.Name }
-
             New-Object -TypeName PSCustomObject -Property @{
                 Id = $id
                 OwnerType = 'Project'
                 OwnerName = $currentProject.Name
                 Type = 'Action'
-                Name = $name
-                Value = ""
+                Name = $stepName
+                Value = $_.Name
                 Scope = @{
                     Role = $targetRoles
                     Environment = $_.Environments

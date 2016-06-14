@@ -12,10 +12,10 @@ function Get-OctopusMachine {
             OwnerName = $OwnerName
             Type = "Machine"
             Name = $_.Name
-            Value = ""
+            Value = ($_.Roles -join ', ')
             Scope = @{
                 Environment = $_.EnvironmentIds
-                Role = $_.RolesIds
+                Role = $_.Roles
             }
         }
     }

@@ -37,11 +37,28 @@ function Get-OctopusScope {
             if ($null -eq $_.Scope.$Scope -or $_.Scope.$Scope.Count -eq 0) { $IncludeUnScoped.ToBool() }
             else { $_.Scope.$Scope -contains $scopeId }
         } |
-        Sort-Object -Property @('OwnerType', 'OwnerName', 'Type', 'Name', 'Value') |
+        Sort-Object -Property @(
+                @{ Expression = {
+                    $e = $_
+                    switch ($e.Type) {
+                        "LifeCycle" { 1 }
+                        "VariableSet" {
+                            if ($e.OwnerType -eq 'Library') { 2 }
+                            if ($e.OwnerType -eq 'Project') { 3 }
+                        }
+                        "Action" { 4 }
+                        "Machine" { 5 }
+                    }
+                }
+            }
+            'OwnerName'
+            'Name') |
         Format-Table -GroupBy Type -Property @(
-                @{Name = 'Owner Type'; Expression = { $_.OwnerType }; Width = 12 }
-                @{Name = 'Owner Name'; Expression = { $_.OwnerName }; Width = 40 }
-                @{Name = 'Type'; Expression = { $_.Type }; Width = 12 }
+                @{Name = 'Container'; Expression = {
+                    if ($_.Type -eq 'VariableSet') { '{0} ({1})' -f $_.OwnerName, $_.OwnerType }
+                    else { $_.OwnerName }
+                    }; Width = 50 }
                 @{Name = 'Name'; Expression = { $_.Name } }
-            ) -Wrap
+                @{Name = 'Value'; Expression = { $_.Value } }                
+            )
 }
