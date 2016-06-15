@@ -3,6 +3,9 @@ A PowerShell Module with useful helper functions to use when developing or maint
 
 ```
 Import-Modue .\OctopusToolkit -Force
+```
+
+```
 Connect-OctopusApi -Uri "https://octopus.com/" -ApiKey "API-X"
 ```
 
